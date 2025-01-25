@@ -3,8 +3,8 @@
 
 ## Steps the "Bad Actor" Took to Create Logs and IoCs:
 1. **Reconnaissance**: The bad actor scans for open RDP ports (TCP 3389) on the target network.
-   - Utilizes tools like Nmap or Shodan to find exposed RDP services.
-2. **Brute Force or Exploit**: The bad actor attempts to authenticate using brute force or exploits a vulnerability (e.g., BlueKeep).
+   - Utilizes Nmap to find exposed services.
+2. **Brute Force**: The bad actor attempts to authenticate using brute force.
    - Common usernames attempted: `Administrator`, `Admin`, `root`, etc.
    - Common passwords: `Password123!`, `P@ssw0rd!`, etc.
 3. **Successful Login**: The attacker successfully logs into the machine over RDP.
