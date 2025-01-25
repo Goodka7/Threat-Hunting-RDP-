@@ -12,7 +12,7 @@
 
 ##  Scenario
 
-Management suspects that some employees may be using TOR browsers to bypass network security controls because recent network logs show unusual encrypted traffic patterns and connections to known TOR entry nodes. Additionally, there have been anonymous reports of employees discussing ways to access restricted sites during work hours. The goal is to detect any TOR usage and analyze related security incidents to mitigate potential risks. If any use of TOR is found, notify management.
+Management has observed an increasing number of failed login attempts to critical systems via RDP (port 3389). There are concerns that attackers are attempting to exploit weak credentials or bypass authentication measures. The goal is to detect any RDP brute force attempts, particularly targeting administrative accounts, and analyze related security incidents. If successful login attempts are detected, notify management immediately.
 
 ### High-Level TOR-Related IoC Discovery Plan
 
