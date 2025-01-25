@@ -1,6 +1,6 @@
 <img width="400" src="https://github.com/user-attachments/assets/8c336c48-6bc5-428c-b4be-8af9575c9a83" alt="Computer with 'RDP' on it."/>
 
-# Threat Hunt Report: Unauthorized TOR Usage
+# Threat Hunt Report: Unauthorized RDP Access
 - [Scenario Creation](https://github.com/Goodka7/Threat-Hunting/blob/main/resources/Threat_Hunt_Event(TOR%20Usage).md)
 
 ## Platforms and Languages Leveraged
