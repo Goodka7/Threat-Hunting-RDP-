@@ -95,82 +95,38 @@ DeviceProcessEvents
 
 ---
 
-### 4. Searched the `DeviceNetworkEvents` Table for TOR Network Connections
+## **Chronological Event Timeline**
 
-Searched for any indication the TOR browser was used to establish a connection using any of the known TOR ports. The results showed user “labuser” did indeed use tor to connect to an url.
+### 1. RDP Session Initiation
+- **Time:** `3:29:12 PM, January 27, 2025`
+- **Event:** The user `labuser` logged into the device `thscenariovm` via RDP.
+- **Action:** Successful login detected.
+- **Details:** Logon type `RemoteInteractive`, originating from IP address `10.0.8.5`.
 
-At 3:43:03 PM on January 20, 2025, a successful connection was made by the user "labuser" from the device "hardmodevm" to the remote IP address 45.21.116.144 on port 9001. The connection was made using the file "tor.exe," and the remote URL accessed was https://www.35yt53tip6fr4hoov4a.com.
-
-
-**Query used to locate events:**
-
-```kql
-DeviceNetworkEvents
-| where DeviceName  == "hardmodevm"
-| where InitiatingProcessAccountName == "labuser"
-| where RemotePort in ("9001", "9030", "9040", "9050", "9051", "9150", "80", "443")  
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath  
-| order by Timestamp desc
-```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/f88b30e1-ccca-4a3a-b601-65992d08f1d3">
-
----
-
-## Chronological Event Timeline 
-
-### 1. File Download - TOR Installer
-
-- **Time:** `3:29:50 PM, January 20, 2025`
-- **Event:** The user "employee" downloaded a file named `tor-browser-windows-x86_64-portable-14.0.4.exe` to the Downloads folder.
-- **Action:** File download detected.
-- **File Path:** `C:\Users\labuser\Downloads\tor-browser-windows-x86_64-portable-14.0.4.exe`
-
-### 2. Process Execution - TOR Browser Installation
-
-- **Time:** `3:30:55 PM, January 20, 2025`
-- **Event:** The user "labuser" executed the file `tor-browser-windows-x86_64-portable-14.0.4.exe` in silent mode, initiating a background installation of the TOR Browser.
+### 2. Command Execution - PowerShell Script
+- **Time:** `3:48:54 PM, January 27, 2025`
+- **Event:** The user executed a PowerShell script using `cmd.exe`.
 - **Action:** Process creation detected.
-- **Command:** `cmd.exe /c powershell.exe -ExecutionPolicy Bypass -Command "Start-Process \"C:\Downloads\tor-browser-windows-x86_64-portable-14.0.4.exe\" -ArgumentList '/S' -NoNewWindow -Wait".`
-- **File Path:** `C:\Users\labuser\Downloads\tor-browser-windows-x86_64-portable-14.0.1.exe`
+- **Command:** `powershell.exe -ExecutionPolicy Bypass -File script.ps1`
 
-### 3. Process Execution - TOR Browser Launch
-
-- **Time:** `3:42:26 PM to 3:42:49 PM, January 20, 2025`
-- **Event:** User "employee" opened the TOR browser. Subsequent processes associated with TOR browser, such as `firefox.exe` and `tor.exe`, were also created, indicating that the browser launched successfully.
-- **Action:** Process creation of TOR browser-related executables detected.
-- **File Path:** `C:\Users\labuser\Desktop\Tor Browser\Browser\TorBrowser\Tor\tor.exe`
-
-### 4. Network Connection - TOR Network
-
-- **Time:** `3:43:03 PM, January 20, 2025`
-- **Event:** A network connection to IP `45.21.116.144` on port `9001` by user "labuser" was established using `tor.exe`, confirming TOR browser network activity.
-- **Action:** Connection success.
-- **Process:** `tor.exe`
-- **File Path:** `c:\users\labuser\desktop\tor browser\browser\torbrowser\tor\tor.exe`
-
-### 5. Additional Network Connections - TOR Browser Activity
-
-- **Time:** `3:43:36 PM, January 20, 2025` - Local connection to `127.0.0.1` on port `9150`.
-- **Event:** Additional TOR network connections were established, indicating ongoing activity by user "employee" through the TOR browser.
-- **Action:** Multiple successful connections detected.
-
-### 6. File Creation - TOR Shopping List
-
-- **Time:** `3:51 to 3:55 PM, January 20, 2025`
-- **Event:** The user "labuser" created a folder named `tor-shopping-list` on the desktop, and created several files with names that are potentially related to their TOR browser activities.
-- **Action:** File creation detected.
-- **File Path:** `C:\Users\labuser\Desktop\tor-shopping-list`
+### 3. Network Activity - Internal Communication
+- **Time:** `3:50:12 PM, January 27, 2025`
+- **Event:** A PowerShell command initiated a connection to an internal IP address.
+- **Action:** Network connection detected.
+- **Details:** Connected to IP `10.0.0.5` using `powershell.exe`.
 
 ---
 
 ## Summary
 
-The user "labuser" on the device "hardmodevm" installed and used the Tor Browser, taking actions that raised concerns. First, "labuser" silently initiated the installation of the Tor Browser through a PowerShell command. After the installation, they created the "tor.exe" file and executed it, which started the Tor service with specific configurations. Additionally, multiple instances of "firefox.exe" associated with the Tor Browser were launched, and the user successfully connected to the Tor network, accessing a remote IP and URL, suggesting the use of Tor for anonymous browsing. Furthermore, a folder (tor-shopping-list) containing several .txt and .json files was created, holding several files with names indicating potential illicit activity. These actions suggest that the user may have been engaging in suspicious or unauthorized activities using the Tor network.
+The user `labuser` on the device `thscenariovm` accessed the system via RDP and executed actions that raised concerns. First, `labuser` successfully logged into the system from IP address `10.0.8.5` using Remote Desktop Protocol (RDP). Once logged in, they executed a PowerShell script via `cmd.exe` using a bypassed execution policy, indicating potential script-based activity.
+
+Subsequently, the user initiated a PowerShell command to establish a network connection to an internal IP address (`10.0.0.5`). These actions reflect deliberate interaction with system resources and network communication, potentially indicating post-compromise behavior. The commands executed and the connections established are consistent with scripted activity during the session, raising the need for further investigation to ensure no unauthorized changes or persistence mechanisms were introduced.
 
 ---
 
 ## Response Taken
 
-TOR usage was confirmed on the endpoint `hardmodevm` by the user `labuser`. The device was isolated, and the user's direct manager was notified.
+Unauthorized RDP access was confirmed on the endpoint `thscenariovm` by the user `labuser`. The device was isolated from the network, and the incident was escalated to the security team for further investigation. Additionally, the user's direct manager was notified to address potential policy violations.
 
 ---
