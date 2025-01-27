@@ -48,26 +48,26 @@ DeviceLogonEvents
 
 ---
 
-### 2. Searched the `DeviceProcessEvents` Table
+### 2. Searched the `DeviceNetworkEvents` Table
 
-Searched for any `ProcessCommandLine` that contained the string "tor-browser-windows-x86_64-portable-14.0.4.exe". 
+Searched for processes and network activity originating from the device "thscenariovm" during and after the identified RDP session.
 
-At 3:30:55 PM on January 20, 2025, the user "labuser" created a process called "cmd.exe" on the device "hardmodevm." The process was located in C:\Windows\System32\cmd.exe, with the SHA256 hash of badf4752413cb0cbdc03fb95820ca167f0cdc63b597ccdb5ef43111180e088b0. 
+The dataset reveals multiple processes and network connections initiated shortly after the RDP session. On **Jan 27, 2025, at 3:43:43 PM**, a network connection was established with the internal IP address `10.0.0.5` using the process `svchost.exe`. This activity may indicate an attempt to interact with internal resources following the RDP session.
 
-The command executed was:<span style="color: green;">
-"cmd.exe" /c powershell.exe -ExecutionPolicy Bypass -Command "Start-Process \"C:\Downloads\tor-browser-windows-x86_64-portable-14.0.4.exe\" -ArgumentList '/S' -NoNewWindow -Wait"</span>, which initiated the installation of the Tor Browser, silently.
+Additionally, on **Jan 27, 2025, at 3:44:28 PM**, a process `powershell_ise.exe` executed on the local machine, potentially indicating manual script execution or system reconnaissance. A connection to the loopback address `::1` on port `47001` was identified during this process, suggesting local inter-process communication or system modification.
+
+Earlier activity on **Jan 27, 2025, at 2:49:26 PM**, initiated by `powershell.exe`, shows a connection to the external IP `20.10.127.193` over port `443`, which could represent an attempt to communicate with an external server.
+
+These activities raise concerns about potential malicious intent, including data exfiltration, internal reconnaissance, or persistence mechanisms. Further investigation into the purpose and origin of these processes is recommended.
 
 **Query used to locate event:**
 
 ```kql
-
-DeviceProcessEvents
-| where DeviceName  == "hardmodevm"
-| where ProcessCommandLine contains "tor-browser-windows-x86_64-portable-14.0.4.exe"
-| order by Timestamp desc
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName, Command = ProcessCommandLine
+DeviceNetworkEvents
+| where DeviceName == "thscenariovm"
+| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/a610791a-0559-410d-881d-397251039bbf">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/e3f3394a-8095-47d2-8093-15988fc8666b">
 
 ---
 
