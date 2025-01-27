@@ -12,41 +12,39 @@
 
 ##  Scenario
 
-Management has expressed concern over unauthorized access to the Windows 10 system thscenariovm via Remote Desktop Protocol (RDP). Recent security incidents highlight potential misuse of RDP credentials, leading to irregular login patterns and suspicious activity, including privilege escalation and system reconnaissance.
+Management has expressed concern over unauthorized access through Remote Desktop Protocol (RDP), which could compromise system integrity and security. Recent observations suggest irregular login patterns and the potential for malicious activity following RDP sessions, including actions such as privilege escalation and system reconnaissance. Management has given one machine that they believe might be compromised (THScenarioVM "10.0.0.26").
 
-The goal of this report is to detect and analyze unauthorized RDP logins, suspicious command execution, and any modifications indicative of persistence mechanisms or security tool evasion. Any identified Indicators of Compromise (IOCs) and anomalous behaviors will be documented, and immediate notifications will be provided to management for further review and remediation planning.
+The objective is to identify unauthorized RDP access, analyze any suspicious behaviors during and after remote sessions, and detect Indicators of Compromise (IOCs) that may indicate further security risks. Immediate action will be taken to address any identified threats.
 
-### High-Level TOR-Related IoC Discovery Plan
+### High-Level RDP-Related IoC Discovery Plan
 
-- **Check `DeviceFileEvents`** for any `tor(.exe)` or `firefox(.exe)` file events.
-- **Check `DeviceProcessEvents`** for any signs of installation or usage.
-- **Check `DeviceNetworkEvents`** for any signs of outgoing connections over known TOR ports.
+- **Check `DeviceLogonEvents`** for irregular RDP logins, particularly focusing on successful logins from external or suspicious IP addresses.
+- **Check `DeviceProcessEvents`** to identify processes initiated during RDP sessions, such as commands executed via `cmd.exe` or `powershell.exe`, and any creation of new user accounts.
+- **Check `DeviceNetworkEvents`**:  to investigate outbound connections initiated during or after the RDP session, which may indicate data exfiltration or communication with attacker-controlled systems.
 
 ---
 
 ## Steps Taken
 
-### 1. Searched the `DeviceFileEvents` Table
+### 1. Searched the `DeviceLogonEvents` Table
 
-Searched for any file that had the string "tor", ".exe", ".txt", or ".json" in it. 
+Searched for any logon activity related to RDP connections with the action type "LogonSuccess" or "LogonFailed".
 
-At 3:39:26 PM on January 20, 2025, the user "labuser" created a file named "tor.exe" on the device "hardmodevm." The file was saved in the folder path: C:\Users\labuser\Desktop\Tor Browser\Browser\TorBrowser\Tor\tor.exe. The file's SHA256 hash is c3b431779278278cda8d2bf5de5d4da38025717630bfeae1a82c927d0703cd28.	
+The dataset reveals multiple logon events originating from the device "thscenariovm" that align with concerns about unauthorized RDP access. On **Jan 27, 2025, at 3:29:12 PM**, a `RemoteInteractive` logon was successfully executed by the account `labuser`, originating from the IP address `10.0.8.5`. This event represents a direct RDP session initiation.
 
-The search yielded other items including the creation of a folder (tor-shopping-list) which held several artifacts of interest: several .txt files and a few .jsons, with names that suggest illicit activity.
+Additionally, a `Network` logon type on **Jan 27, 2025, at 3:29:08 PM** by the same account from the same IP address suggests further interaction with the system, potentially related to the RDP session. These events raise questions about the intent of these logons and their impact on system security.
 
+Further investigation is required to assess whether these activities indicate malicious access or if additional security mechanisms may have been bypassed during the session.
 
 **Query used to locate events:**
 
 ```kql
-DeviceFileEvents
-| where DeviceName == "hardmodevm"
-| where FileName contains (“tor”, “.txt” , “.exe” , “.json”)
-| where InitiatingProcessAccountName == "labuser"
-| order by Timestamp desc
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, Account = InitiatingProcessAccountName
+DeviceLogonEvents
+| where DeviceName == "thscenariovm"
+| where ActionType in ("LogonFailed", "LogonSuccess")  // Focus on logon attempts
+| project Timestamp, DeviceName, AccountName, LogonType, ActionType, RemoteIP
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/6f212b1a-e4f5-40dc-be67-2a0e4bd44c62">
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/db49fe7f-ee5b-468a-bf32-a0affe7b282d">
+<img width="1212" alt="image" src="github.com/user-attachments/assets/e7f075bd-88e3-4a88-a4aa-2c5092ddc75b">
 
 ---
 
