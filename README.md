@@ -44,7 +44,7 @@ DeviceLogonEvents
 | where ActionType in ("LogonFailed", "LogonSuccess")  // Focus on logon attempts
 | project Timestamp, DeviceName, AccountName, LogonType, ActionType, RemoteIP
 ```
-<img width="1212" alt="image" src="github.com/user-attachments/assets/e7f075bd-88e3-4a88-a4aa-2c5092ddc75b">
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/593766f7-a106-4ab7-9c0e-ce0173d073d2">
 
 ---
 
