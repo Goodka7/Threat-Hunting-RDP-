@@ -12,7 +12,9 @@
 
 ##  Scenario
 
-Management has observed an increasing number of failed login attempts to critical systems via RDP (port 3389). There are concerns that attackers are attempting to exploit weak credentials or bypass authentication measures. The goal is to detect any RDP brute force attempts, particularly targeting administrative accounts, and analyze related security incidents. If successful login attempts are detected, notify management immediately.
+Management has expressed concern over unauthorized access to the Windows 10 system thscenariovm via Remote Desktop Protocol (RDP). Recent security incidents highlight potential misuse of RDP credentials, leading to irregular login patterns and suspicious activity, including privilege escalation and system reconnaissance.
+
+The goal of this report is to detect and analyze unauthorized RDP logins, suspicious command execution, and any modifications indicative of persistence mechanisms or security tool evasion. Any identified Indicators of Compromise (IOCs) and anomalous behaviors will be documented, and immediate notifications will be provided to management for further review and remediation planning.
 
 ### High-Level TOR-Related IoC Discovery Plan
 
