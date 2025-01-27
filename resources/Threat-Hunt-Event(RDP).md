@@ -25,7 +25,6 @@ foreach ($password in $passwords) {
 3. **Successful Login**: The attacker successfully logs into the machine over RDP.
    - Logs show the source IP address used for RDP access.
 4. **Command Execution**: The attacker executes commands or malicious scripts once logged in (e.g., downloading malware, lateral movement).
-5. **Clean-Up**: The attacker may remove logs to cover their tracks or create backdoors for persistent access (e.g., creating new user accounts or disabling security software).
 
 ---
 
