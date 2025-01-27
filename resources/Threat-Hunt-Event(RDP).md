@@ -54,19 +54,13 @@ foreach ($password in $passwords) {
 ```kql
 // Detecting RDP login attempts
 DeviceLogonEvents
-| where LogonType == 10 // RDP login
-| project Timestamp, DeviceName, AccountName, SourceIP, ActionType
-
-// Failed login attempts (brute force) for RDP
-DeviceLogonEvents
-| where LogonType == 10
-| where ActionType == "LogonFailure"
-| project Timestamp, DeviceName, AccountName, SourceIP, ActionType
+| where DeviceName == "thscenariovm"
+| where ActionType in ("LogonFailed", "LogonSuccess")  // Focus on logon attempts
+| project Timestamp, DeviceName, AccountName, LogonType, ActionType, RemoteIP
 
 // Detect RDP traffic on port 3389 from suspicious IPs
 DeviceNetworkEvents
-| where RemotePort == 3389
-| where RemoteIP in ('suspicious_ip_range')
+| where DeviceName == "thscenariovm"
 | project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName
 
 // Detect suspicious processes spawned after RDP login
