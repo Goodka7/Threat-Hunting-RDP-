@@ -85,10 +85,3 @@ DeviceProcessEvents
 
 ## Additional Notes:
 - **None**
-
----
-
-## Revision History:
-| **Version** | **Changes**                   | **Date**         | **Modified By**   |
-|-------------|-------------------------------|------------------|-------------------|
-| 1.0         | Initial draft                  | `January 24, 2024`  | `James Harrington`   
